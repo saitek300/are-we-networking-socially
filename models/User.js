@@ -38,12 +38,12 @@ const userSchema = new Schema(
     }
 );
 
-userSchema
-    .virtual('friendCount')
+// userSchema
+//     .virtual('friendCount')
 
-    fetch(function () {
-        return `${this.friends.length}`
-    })
+//     fetch(function () {
+//         return `${this.friends.length}`
+//     })
 
 const User = model('User', userSchema);
 
