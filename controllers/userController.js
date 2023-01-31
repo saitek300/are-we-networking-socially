@@ -56,15 +56,34 @@ module.exports = {
         )
     },
 
-    // newFriend(req, res) {
-    //     User.create(req.body)
-    //         .then( 
-    //         )
-    // }
-
-     // deleteFriend(req, res) {
-    //     User.findOneAndDelete(req.body)
-    //         .then( 
-    //         )
-    // }
+    newFriend(req, res) {
+        User.findOneAndUpdate(
+        {_id:req.params.userId},
+        {$addToSer:{friends: req.body}},
+        { runValidators: true, new: true }
+        )
+        .then((user) =>
+        !user
+          ? res
+              .status(404)
+              .json({ message: 'No user found with that ID :(' })
+          : res.json(user)
+      )
+      .catch((err) => res.status(500).json(err));
+  },
+    removeFriend(req, res) {
+        User.findOneAndUpdate(
+          { _id: req.params.userId },
+          { $pull: { user: { friends: req.params.friends } } },
+          { runValidators: true, new: true }
+        )
+          .then((user) =>
+            !user
+              ? res
+                  .status(404)
+                  .json({ message: 'No user found with that ID :(' })
+              : res.json(user)
+          )
+          .catch((err) => res.status(500).json(err));
+      },
 };
