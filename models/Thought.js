@@ -49,12 +49,12 @@ const thoughtsSchema = new Schema(
     },
 );
 
-// thoughtsSchema
-//     .virtual('reactionCount')
+thoughtsSchema
+    .virtual('reactionCount')
 
-// fetch(function () {
-//     return `${this.reactions.length}`
-// });
+.get(function () {
+    return `${this.reactions.length}`
+});
 
 const Thoughts = model('thoughts', thoughtsSchema);
 
