@@ -51,4 +51,35 @@ module.exports = {
         )
     },
 
+    createReaction( req,res) {
+        Thought.findOneAndUpdate(
+            {_id:req.params.thoughtId},
+            {$addToSet:{reactions:req.body}},
+           
+        )
+        .then((thought)=>
+        !thought
+            ?res
+                .status(404)
+                .json({message: "no thought found with this Id"})
+                : res.json(thought)
+        )
+    },
+
+    removeReaction(req, res) {
+        Thought.findOneAndUpdate(
+        { _id: req.params.thoughtId },
+        { $pull: { reactions: { reactionId: req.params.reactionId } } },
+      
+        )
+        .then((thought) =>
+            !thought
+            ? res
+                .status(404)
+                .json({ message: 'No reaction found with that ID :(' })
+            : res.json(thought)
+        )
+        .catch((err) => res.status(500).json(err));
+  },
+
 };
