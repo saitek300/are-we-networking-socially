@@ -1,4 +1,4 @@
-const {Thought, User} = require('../models');
+const { Thought, User } = require('../models');
 
 module.exports = {
     //find all thoughts
@@ -36,50 +36,50 @@ module.exports = {
     deleteThought(req, res) {
         Thought.findOneAndRemove({ _id: req.params.thoughtId })
             .then((thought) =>
-            !thought
-            ? res.status(404).json({ message: 'No thought with that ID' })
-            : res.json({ thought })
+                !thought
+                    ? res.status(404).json({ message: 'No thought with that ID' })
+                    : res.json({ thought })
             )
     },
     //update thought by id
     updateThought(req, res) {
-        Thought.findOneAndUpdate({_id: req.params.thoughtId})
-        .then((thought) =>
-        !thought
-            ? res.status(404).json({message: 'thought does not exist'})
-            : res.json({thought})
-        )
+        Thought.findOneAndUpdate({ _id: req.params.thoughtId })
+            .then((thought) =>
+                !thought
+                    ? res.status(404).json({ message: 'thought does not exist' })
+                    : res.json({ thought })
+            )
     },
 
-    createReaction( req,res) {
+    createReaction(req, res) {
         Thought.findOneAndUpdate(
-            {_id:req.params.thoughtId},
-            {$addToSet:{reactions:req.body}},
-           
+            { _id: req.params.thoughtId },
+            { $addToSet: { reactions: req.body } },
+
         )
-        .then((thought)=>
-        !thought
-            ?res
-                .status(404)
-                .json({message: "no thought found with this Id"})
-                : res.json(thought)
-        )
+            .then((thought) =>
+                !thought
+                    ? res
+                        .status(404)
+                        .json({ message: "no thought found with this Id" })
+                    : res.json(thought)
+            )
     },
 
     removeReaction(req, res) {
         Thought.findOneAndUpdate(
-        { _id: req.params.thoughtId },
-        { $pull: { reactions: { reactionId: req.params.reactionId } } },
-      
+            { _id: req.params.thoughtId },
+            { $pull: { reactions: { _id: req.params.reactionId } } },
+
         )
-        .then((thought) =>
-            !thought
-            ? res
-                .status(404)
-                .json({ message: 'No reaction found with that ID :(' })
-            : res.json(thought)
-        )
-        .catch((err) => res.status(500).json(err));
-  },
+            .then((thought) =>
+                !thought
+                    ? res
+                        .status(404)
+                        .json({ message: 'No reaction found with that ID :(' })
+                    : res.json(thought)
+            )
+            .catch((err) => res.status(500).json(err));
+    },
 
 };
