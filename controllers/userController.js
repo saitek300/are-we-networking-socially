@@ -5,18 +5,23 @@ module.exports = {
     //find all users
     getUsers(req, res) {
         User.find()
+        .select('-__v')
+        .populate({path:"thoughts"})
+        .populate({path:"friends"})
             .then(async (users) => {
                 res.json(users);
             })
             .catch((err) => {
                 console.log(err);
-                return res.status(500), json(err);
+                return res.status(500).json(err);
             });
     },
     //find user by id
     getSingleUser(req, res) {
         User.findOne({ _id: req.params.userId })
             .select('-__v')
+            .populate({path:"thoughts"})
+            .populate({path:"friends"})
             .then(async (user) =>
                 !user
                     ? res.status(404).json({ message: 'No user with that ID' })
@@ -31,8 +36,13 @@ module.exports = {
     createUser(req, res) {
         User.create(req.body)
             .then((user) => res.json(user))
-            .catch((err) => res.status(500).json(err));
+            
+            .catch((err) => {
+                console.log(err)
+                res.status(500).json(err)});
+            
     },
+    
     //delete user by id
     deleteUser(req, res) {
         User.findOneAndRemove({ _id: req.params.userId })
@@ -59,8 +69,7 @@ module.exports = {
     newFriend(req, res) {
         User.findOneAndUpdate(
         {_id:req.params.userId},
-        {$addToSet:{friends: req.body}},
-        
+        {$addToSet:{friends: req.params.friendId}},{ new: true}
         )
         .then((user) =>
         !user
