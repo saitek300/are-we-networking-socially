@@ -1,12 +1,12 @@
 const { Schema, model } = require('mongoose');
-const Friend = require('./Friend')
+
 
 
 const userSchema = new Schema(
     {
         username: {
             type: String,
-            unique: true,
+            unique: false,
             required: true,
             trim: true,
         },
@@ -15,8 +15,7 @@ const userSchema = new Schema(
             required: true,
             unique: true,
             match: [
-                /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/,
-                'Please add a valid email address.',
+                /.+@.+\..+/, 'Must match an email address!'
             ],
         },
 
@@ -26,12 +25,18 @@ const userSchema = new Schema(
                 ref: 'Thought', 
             }
         ],
-        friends: [Friend],
+        friends: [
+            {
+                type: Schema.Types.ObjectId,
+                ref: 'User', 
+            }
+        ],
     },
     {
         toJSON: {
             virtuals: true,
-          }
+          },
+          id: false,
     }
 );
 
